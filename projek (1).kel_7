@@ -1,0 +1,150 @@
+# Program Perhitungan Debit Air
+# Rumus Debit: Q = V / t atau Q = A * v
+# Dimana:
+# Q = Debit air (m³/s atau L/s)
+# V = Volume air (m³ atau L)
+# t = Waktu (s)
+# A = Luas penampang (m²)
+# v = Kecepatan aliran (m/s)
+
+def hitung_debit_volume_waktu(volume, waktu, satuan_volume="m³", satuan_waktu="s"):
+    """
+    Menghitung debit air berdasarkan volume dan waktu
+    
+    Args:
+        volume (float): Volume air
+        waktu (float): Waktu yang dibutuhkan
+        satuan_volume (str): Satuan volume ("m³" atau "L")
+        satuan_waktu (str): Satuan waktu ("s", "menit", "jam")
+        
+    Returns:
+        tuple: (debit, satuan)
+    """
+    # Konversi waktu ke detik jika perlu
+    if satuan_waktu == "menit":
+        waktu = waktu * 60
+    elif satuan_waktu == "jam":
+        waktu = waktu * 3600
+        
+    # Konversi volume ke m³ jika input dalam liter
+    if satuan_volume == "L":
+        volume = volume / 1000  # 1 L = 0.001 m³
+        
+    # Hitung debit dalam m³/s
+    debit_m3s = volume / waktu
+    
+    # Konversi ke liter per detik
+    debit_ls = debit_m3s * 1000
+    
+    return {
+        "m³/s": debit_m3s,
+        "L/s": debit_ls
+    }
+
+def hitung_debit_luas_kecepatan(luas_penampang, kecepatan):
+    """
+    Menghitung debit air berdasarkan luas penampang dan kecepatan aliran
+    
+    Args:
+        luas_penampang (float): Luas penampang dalam m²
+        kecepatan (float): Kecepatan aliran dalam m/s
+        
+    Returns:
+        tuple: (debit, satuan)
+    """
+    # Hitung debit dalam m³/s
+    debit_m3s = luas_penampang * kecepatan
+    
+    # Konversi ke liter per detik
+    debit_ls = debit_m3s * 1000
+    
+    return {
+        "m³/s": debit_m3s,
+        "L/s": debit_ls
+    }
+
+def hitung_luas_penampang_lingkaran(diameter):
+    """
+    Menghitung luas penampang pipa berbentuk lingkaran
+    
+    Args:
+        diameter (float): Diameter pipa dalam meter
+        
+    Returns:
+        float: Luas penampang dalam m²
+    """
+    import math
+    jari_jari = diameter / 2
+    luas = math.pi * (jari_jari ** 2)
+    return luas
+
+def hitung_luas_penampang_persegi(panjang, lebar):
+    """
+    Menghitung luas penampang saluran berbentuk persegi/persegi panjang
+    
+    Args:
+        panjang (float): Panjang saluran dalam meter
+        lebar (float): Lebar saluran dalam meter
+        
+    Returns:
+        float: Luas penampang dalam m²
+    """
+    return panjang * lebar
+
+def main():
+    print("=" * 50)
+    print("PROGRAM KALKULATOR DEBIT AIR")
+    print("=" * 50)
+    print("\nPilih metode perhitungan:")
+    print("1. Hitung debit berdasarkan Volume dan Waktu")
+    print("2. Hitung debit berdasarkan Luas Penampang dan Kecepatan")
+    
+    pilihan = input("\nMasukkan pilihan (1/2): ")
+    
+    if pilihan == "1":
+        print("\n-- Perhitungan Debit Air dengan Volume dan Waktu --")
+        volume = float(input("Masukkan volume air: "))
+        satuan_volume = input("Pilih satuan volume (m³/L): ")
+        waktu = float(input("Masukkan waktu: "))
+        satuan_waktu = input("Pilih satuan waktu (s/menit/jam): ")
+        
+        hasil = hitung_debit_volume_waktu(volume, waktu, satuan_volume, satuan_waktu)
+        
+        print("\nHasil perhitungan debit air:")
+        print(f"Debit = {hasil['m³/s']:.6f} m³/s")
+        print(f"Debit = {hasil['L/s']:.6f} L/s")
+        
+    elif pilihan == "2":
+        print("\n-- Perhitungan Debit Air dengan Luas Penampang dan Kecepatan --")
+        print("Pilih bentuk penampang:")
+        print("a. Lingkaran (pipa)")
+        print("b. Persegi/Persegi Panjang (saluran)")
+        
+        bentuk = input("\nMasukkan pilihan bentuk (a/b): ")
+        
+        if bentuk.lower() == "a":
+            diameter = float(input("Masukkan diameter pipa (meter): "))
+            luas = hitung_luas_penampang_lingkaran(diameter)
+            print(f"Luas penampang pipa = {luas:.4f} m²")
+        elif bentuk.lower() == "b":
+            panjang = float(input("Masukkan lebar saluran (meter): "))
+            lebar = float(input("Masukkan kedalaman air (meter): "))
+            luas = hitung_luas_penampang_persegi(panjang, lebar)
+            print(f"Luas penampang saluran = {luas:.4f} m²")
+        else:
+            print("Pilihan tidak valid!")
+            return
+        
+        kecepatan = float(input("Masukkan kecepatan aliran air (m/s): "))
+        
+        hasil = hitung_debit_luas_kecepatan(luas, kecepatan)
+        
+        print("\nHasil perhitungan debit air:")
+        print(f"Debit = {hasil['m³/s']:.6f} m³/s")
+        print(f"Debit = {hasil['L/s']:.6f} L/s")
+        
+    else:
+        print("Pilihan tidak valid!")
+
+if __name__ == "__main__":
+    main()
